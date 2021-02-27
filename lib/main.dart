@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import './question.dart';
-import './answer.dart';
+import 'package:flutter_complete_guide/quiz.dart';
+import 'package:flutter_complete_guide/result.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,26 +14,56 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   static const questions = const [
     {
-      'questiontxt': 'what\'s favourite spor236',
-      'answers': ['Black', 'red', 'white', 'green']
+      'questiontxt': 'What\'s favourite colors',
+      'answers': [
+        {'text': 'Black', 'score': 10},
+        {'text': 'Red', 'score': 0},
+        {'text': 'white', 'score': 0},
+        {'text': 'blue', 'score': 0},
+      ]
     },
     {
-      'questiontxt': 'what\'s favourite anilamls',
-      'answers': ['Rabitte', 'lion', 'fox', 'lion']
+      'questiontxt': 'What\'s favourite animals',
+      'answers': [
+        {'text': 'lion', 'score': 0},
+        {'text': 'rabbit', 'score': 10},
+        {'text': 'cat', 'score': 0},
+        {'text': 'cow', 'score': 0},
+      ]
     },
     {
-      'questiontxt': 'what\'s favourite spor',
-      'answers': ['footbull', 'basketbool', 'no', 'tenis']
+      'questiontxt': 'What\'s favourite spors',
+      'answers': [
+        {'text': 'tenis', 'score': 0},
+        {'text': 'volyboll', 'score': 0},
+        {'text': 'basketboll', 'score': 10},
+        {'text': 'running', 'score': 0},
+      ]
     },
     {
-      'questiontxt': 'what\'s favourite spor',
-      'answers': ['computer game ', 'war game ', 'Race', 'guess']
+      'questiontxt': 'what\'s favourite books',
+      'answers': [
+        {'text': 'stories', 'score': 0},
+        {'text': 'math', 'score': 0},
+        {'text': 'hosrical', 'score': 0},
+        {'text': 'Science', 'score': 10},
+      ]
     }
   ];
 
   var _indexQuestion = 0;
+  var _totalScore = 0;
 
-  void _answerQuestion() {
+  void _resetQuiz() {
+    setState(() {
+      _indexQuestion = 0;
+      _totalScore = 0;
+    });
+    print('_resetQuiz');
+  }
+
+  void _answerQuestion(int score) {
+    _totalScore += score;
     setState(() {
       _indexQuestion += 1;
     });
@@ -46,19 +76,14 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('app bar '),
+          title: Text('My first App  '),
         ),
         body: _indexQuestion < questions.length
-            ? Column(
-                children: [
-                  Question(questions[_indexQuestion]['questiontxt']),
-                  ...(questions[_indexQuestion]['answers'] as List<String>)
-                      .map((answer) {
-                    return Answer(_answerQuestion, answer);
-                  })
-                ],
-              )
-            : Text('you did finished '),
+            ? Quiz(
+                questions: questions,
+                indexQuestion: _indexQuestion,
+                answerQuestion: _answerQuestion)
+            : Result(_resetQuiz, _totalScore),
       ),
     );
   }
